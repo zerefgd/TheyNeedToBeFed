@@ -8,6 +8,8 @@ public class MainMenuManager : MonoBehaviour
 {
     public static MainMenuManager Instance { get; private set;}
 
+    public List<StageUIData> Stages;
+
     [SerializeField]
     private GameObject _mainPanel, _stagePanel, _levelPanel, _activeSoundButton;
 
@@ -21,7 +23,7 @@ public class MainMenuManager : MonoBehaviour
     private TMP_Text _levelsDiamondText, _stageDiamondsText, _currentStageText;
 
     [SerializeField]
-    private Image _bgImage;
+    private Image _levelBGImage;
 
     public int Diamonds { get; private set; }
 
@@ -80,6 +82,32 @@ public class MainMenuManager : MonoBehaviour
         AudioManager.Instance.ToggleSound();
     }
 
+    public void BackToMenu()
+    {
+        _stagePanel.SetActive(false);
+        _mainPanel.SetActive(true);
+    }
+
+    public void ClickedHowToPlay()
+    {
+        StartCoroutine(IClickedHowToPlay());
+    }
+
+    public void ClickedStage()
+    {
+        _stagePanel.SetActive(false);
+        _levelPanel.SetActive(true);
+        _levelsDiamondText.text = "X " + Diamonds.ToString();
+        _currentStageText.text = "world " + CurrentStage.ToString();
+        _levelBGImage.sprite = Stages[CurrentStage - 1].CurrentImage;
+    }
+
+    public void BackToStage()
+    {
+        _levelPanel.SetActive(false);
+        _stagePanel.SetActive(true);
+    }
+
     private IEnumerator IClickedPlay()
     {
         float animTime = _clickClip.length;
@@ -89,7 +117,7 @@ public class MainMenuManager : MonoBehaviour
         _mainPanel.SetActive(false);
         _stagePanel.SetActive(true);
 
-        //_stageDiamondsText.text = "X " + Diamonds.ToString();
+        _stageDiamondsText.text = "X " + Diamonds.ToString();
     }
 
     private IEnumerator IGameQuit()
@@ -103,5 +131,15 @@ public class MainMenuManager : MonoBehaviour
 #else
         Application.Quit();
 #endif
+    }
+
+    private IEnumerator IClickedHowToPlay()
+    {
+        float animTime = _clickClip.length;
+        _howToPlayAnimator.Play(_clickClip.name);
+        yield return new WaitForSeconds(animTime);
+
+
+        UnityEngine.SceneManagement.SceneManager.LoadScene(Constants.Data.HOW_TO_PLAY);
     }
 }

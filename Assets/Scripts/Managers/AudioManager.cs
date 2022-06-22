@@ -41,15 +41,16 @@ public class AudioManager : MonoBehaviour
             return;
         }
 
-        PlayerPrefs.SetInt(Constants.Data.SETTINGS_SOUND, isSoundMuted ? 0 : 1);
-        _effectSource.mute = isSoundMuted;
-        _musicSource.mute = isSoundMuted;
+        PlayerPrefs.SetInt(Constants.Data.SETTINGS_SOUND, IsSoundMuted ? 0 : 1);        
+        _effectSource.mute = IsSoundMuted;
+        _musicSource.mute = IsSoundMuted;
         _musicSource.Play();
+
     }
 
     public void AddButtonSound()
     {
-        var buttons = FindObjectsOfType<Button>();
+        var buttons = FindObjectsOfType<Button>(true);
         for (int i = 0; i < buttons.Length; i++)
         {
             buttons[i].onClick.AddListener(() => {
